@@ -3,18 +3,20 @@ module.exports = function (grunt) {
   RegExp.quote = function (string) {
     return string.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&');
   };
+  var sass = require('node-sass');
 
+  require('load-grunt-tasks')(grunt);
   // Project configuration.
   grunt.initConfig({
 
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*!\n' +
-    ' * Bootstrap-select v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
-    ' *\n' +
-    ' * Copyright 2012-<%= grunt.template.today(\'yyyy\') %> SnapAppointments, LLC\n' +
-    ' * Licensed under <%= pkg.license %> (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)\n' +
-    ' */\n',
+      ' * Bootstrap-select v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+      ' *\n' +
+      ' * Copyright 2012-<%= grunt.template.today(\'yyyy\') %> SnapAppointments, LLC\n' +
+      ' * Licensed under <%= pkg.license %> (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)\n' +
+      ' */\n',
 
     // Task configuration.
 
@@ -94,26 +96,43 @@ module.exports = function (grunt) {
       }
     },
 
-    less: {
+    // less: {
+    //   options: {
+    //     strictMath: true,
+    //     sourceMap: true,
+    //     outputSourceFiles: true,
+    //     sourceMapURL: '<%= pkg.name %>.css.map',
+    //     sourceMapFilename: '<%= less.css.dest %>.map'
+    //   },
+    //   css: {
+    //     src: 'less/bootstrap-select.less',
+    //     dest: 'dist/css/<%= pkg.name %>.css'
+    //   }
+    // },
+    sass: {
       options: {
-        strictMath: true,
+        implementation: sass,
         sourceMap: true,
         outputSourceFiles: true,
         sourceMapURL: '<%= pkg.name %>.css.map',
-        sourceMapFilename: '<%= less.css.dest %>.map'
+        sourceMapFilename: '<%= sass.css.dest %>.map'
       },
       css: {
-        src: 'less/bootstrap-select.less',
+        src: 'sass/bootstrap-select.scss',
         dest: 'dist/css/<%= pkg.name %>.css'
+      },
+      dist: {
+        files: {
+          'dist/css/bootstrap-select.css': 'sass/bootstrap-select.scss'
+        }
       }
     },
-
     usebanner: {
       css: {
         options: {
           banner: '<%= banner %>'
         },
-        src: '<%= less.css.dest %>'
+        src: '<%= sass.css.dest %>'
       }
     },
 
@@ -135,7 +154,7 @@ module.exports = function (grunt) {
         advanced: false
       },
       css: {
-        src: '<%= less.css.dest %>',
+        src: '<%= sass.css.dest %>',
         dest: 'dist/css/<%= pkg.name %>.min.css'
       }
     },
@@ -162,7 +181,7 @@ module.exports = function (grunt) {
         'overqualified-elements': false
       },
       css: {
-        src: '<%= less.css.dest %>'
+        src: '<%= sass.css.dest %>'
       }
     },
 
@@ -230,7 +249,7 @@ module.exports = function (grunt) {
         options: {
           map: true
         },
-        src: '<%= less.css.dest %>'
+        src: '<%= sass.css.dest %>'
       }
     },
 
@@ -240,17 +259,15 @@ module.exports = function (grunt) {
           archive: 'bootstrap-select-<%= pkg.version %>.zip',
           mode: 'zip'
         },
-        files: [
-          {
-            expand: true,
-            cwd: 'dist/',
-            src: '**',
-            dest: 'bootstrap-select-<%= pkg.version %>/'
-          }, {
-            src: ['bower.json', 'composer.json', 'package.json'],
-            dest: 'bootstrap-select-<%= pkg.version %>/'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: 'dist/',
+          src: '**',
+          dest: 'bootstrap-select-<%= pkg.version %>/'
+        }, {
+          src: ['bower.json', 'composer.json', 'package.json'],
+          dest: 'bootstrap-select-<%= pkg.version %>/'
+        }]
       }
     },
 
@@ -263,8 +280,12 @@ module.exports = function (grunt) {
         files: ['<%= eslint.main.src %>', '<%= eslint.i18n.src %>'],
         tasks: 'build-js'
       },
-      less: {
-        files: 'less/*.less',
+      // less: {
+      //   files: 'less/*.less',
+      //   tasks: 'build-css'
+      // },
+      sass: {
+        files: 'sass/*.scss',
         tasks: 'build-css'
       }
     }
@@ -279,7 +300,7 @@ module.exports = function (grunt) {
   // to update version number, use grunt version::x.y.z
 
   // CSS distribution
-  grunt.registerTask('build-css', ['clean:css', 'less', 'autoprefixer', 'usebanner:css', 'cssmin']);
+  grunt.registerTask('build-css', ['clean:css', 'sass', 'autoprefixer', 'usebanner:css', 'cssmin']);
 
   // JS distribution
   grunt.registerTask('build-js', ['clean:js', 'eslint', 'concat', 'uglify']);

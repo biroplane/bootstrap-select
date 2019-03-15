@@ -7,13 +7,13 @@
 
 @mixin box-sizing($fmt) {
   -webkit-box-sizing: $fmt;
-     -moz-box-sizing: $fmt;
-          box-sizing: $fmt;
+  -moz-box-sizing: $fmt;
+  box-sizing: $fmt;
 }
 
 @mixin box-shadow($fmt) {
   -webkit-box-shadow: $fmt;
-          box-shadow: $fmt;
+  box-shadow: $fmt;
 }
 
 @function fade($color, $amnt) {
@@ -227,7 +227,7 @@ select.selectpicker {
   .dropdown-toggle {
     // necessary to maintain proper button height with Bootstrap 3
     &:before {
-      content: '';
+      content: "";
       display: inline-block;
     }
 
@@ -394,7 +394,7 @@ select.selectpicker {
 
   // default check mark for use without an icon font
   .bs-ok-default:after {
-    content: '';
+    content: "";
     display: block;
     width: 0.5em;
     height: 1em;
@@ -412,7 +412,7 @@ select.selectpicker {
 
   .dropdown-toggle .filter-option {
     &:before {
-      content: '';
+      content: "";
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
       border-bottom: 7px solid $color-grey-arrow;
@@ -423,7 +423,7 @@ select.selectpicker {
     }
 
     &:after {
-      content: '';
+      content: "";
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
       border-bottom: 6px solid white;
@@ -473,11 +473,13 @@ select.selectpicker {
 
 .bs-searchbox,
 .bs-actionsbox,
+.bs-submitbox,
 .bs-donebutton {
   padding: 4px 8px;
 }
 
-.bs-actionsbox {
+.bs-actionsbox,
+.bs-submitbox {
   width: 100%;
   @include box-sizing(border-box);
 
@@ -498,6 +500,10 @@ select.selectpicker {
 
 .bs-searchbox {
   & + .bs-actionsbox {
+    padding: 0 8px 4px;
+  }
+
+  & + .bs-submitbox {
     padding: 0 8px 4px;
   }
 
